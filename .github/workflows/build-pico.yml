@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake gcc-arm-none-eabi g++-arm-none-eabi
+          sudo apt-get install -y cmake gcc-arm-none-eabi
 
       - name: Clone Pico SDK v2.2.0
         run: |
