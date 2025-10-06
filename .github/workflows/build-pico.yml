@@ -1,0 +1,41 @@
+name: Build Pico
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake gcc-arm-none-eabi g++-arm-none-eabi
+
+      - name: Clone Pico SDK v2.2.0
+        run: |
+          git clone --depth 1 --branch 2.2.0 https://github.com/raspberrypi/pico-sdk.git $HOME/pico-sdk
+
+      - name: Set PICO_SDK_PATH
+        run: echo "PICO_SDK_PATH=$HOME/pico-sdk" >> $GITHUB_ENV
+      
+      - name: Enter picopass-pico directory
+        run: cd picopass-pico
+
+      - name: Configure CMake
+        run: |
+          cmake -DPICO_BOARD=pico_w \
+                -DPICO_SDK_PATH=$HOME/pico-sdk \
+                -DCMAKE_C_COMPILER=arm-none-eabi-gcc \
+                -DCMAKE_CXX_COMPILER=arm-none-eabi-g++ \
+                -B build -S .
+
+      - name: Build
+        run: cmake --build build -j

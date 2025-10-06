@@ -1,0 +1,4 @@
+build/
+.vscode/
+.micropico
+picopass-pico/main.py
