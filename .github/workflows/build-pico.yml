@@ -31,8 +31,8 @@ jobs:
         run: |
           cmake -DPICO_BOARD=pico_w \
                 -DPICO_SDK_PATH=$HOME/pico-sdk \
-                -DCMAKE_C_COMPILER=arm-none-eabi-gcc \
-                -DCMAKE_CXX_COMPILER=arm-none-eabi-g++ \
+                -DCMAKE_C_COMPILER=/usr/bin/arm-none-eabi-gcc \
+                -DCMAKE_CXX_COMPILER=/usr/bin/arm-none-eabi-g++ \
                 -B build -S .
 
       - name: Build
