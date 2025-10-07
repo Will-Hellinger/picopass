@@ -14,23 +14,57 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Cache ARM Toolchain
+        id: cache-arm-toolchain
+        uses: actions/cache@v4
+        with:
+          path: /usr/lib/gcc/arm-none-eabi
+          key: arm-toolchain-${{ runner.os }}-${{ hashFiles('/etc/apt/sources.list*') }}
+          restore-keys: |
+            arm-toolchain-${{ runner.os }}-
+
+      - name: Cache Pico SDK
+        id: cache-pico-sdk
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/pico-sdk
+          key: pico-sdk-2.2.0-${{ runner.os }}
+          restore-keys: |
+            pico-sdk-2.2.0-
+
       - name: Install dependencies
+        if: steps.cache-arm-toolchain.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake gcc-arm-none-eabi
 
-      - name: Clone Pico SDK v2.2.0
+      - name: Install CMake (always needed)
+        if: steps.cache-arm-toolchain.outputs.cache-hit == 'true'
         run: |
-          git clone --depth 1 --branch 2.2.0 https://github.com/raspberrypi/pico-sdk.git $HOME/pico-sdk
+          sudo apt-get update
+          sudo apt-get install -y cmake
+
+      - name: Clone Pico SDK v2.2.0
+        if: steps.cache-pico-sdk.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth 1 --branch 2.2.0 --recursive https://github.com/raspberrypi/pico-sdk.git ${{ runner.temp }}/pico-sdk
 
       - name: Set PICO_SDK_PATH
-        run: echo "PICO_SDK_PATH=$HOME/pico-sdk" >> $GITHUB_ENV
+        run: echo "PICO_SDK_PATH=${{ runner.temp }}/pico-sdk" >> $GITHUB_ENV
+
+      - name: Cache build directory
+        uses: actions/cache@v4
+        with:
+          path: picopass-pico/build
+          key: build-cache-${{ hashFiles('picopass-pico/CMakeLists.txt', 'picopass-pico/**/*.c', 'picopass-pico/**/*.h') }}
+          restore-keys: |
+            build-cache-
 
       - name: Configure CMake
         working-directory: picopass-pico
         run: |
           cmake -DPICO_BOARD=pico_w \
-                -DPICO_SDK_PATH=$HOME/pico-sdk \
+                -DPICO_SDK_PATH=${{ runner.temp }}/pico-sdk \
                 -DCMAKE_C_COMPILER=/usr/bin/arm-none-eabi-gcc \
                 -DCMAKE_CXX_COMPILER=/usr/bin/arm-none-eabi-g++ \
                 -B build -S .
@@ -38,3 +72,9 @@ jobs:
       - name: Build
         working-directory: picopass-pico
         run: cmake --build build -j
+
+      - name: Upload UF2 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: picopass-uf2
+          path: picopass-pico/build/*.uf2
