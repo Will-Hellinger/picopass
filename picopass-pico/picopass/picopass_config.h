@@ -1,0 +1,8 @@
+#pragma once
+
+#define PICOPASS_MANUF_ID_LO 0xFF
+#define PICOPASS_MANUF_ID_HI 0xFF
+
+#define PICOPASS_RSSI_THRESHOLD -100
+
+#define PICOPASS_DEVICE_TYPE 0x01

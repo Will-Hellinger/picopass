@@ -37,9 +37,7 @@ cd picopass
 
 cd picopass-pico
 
-cmake -DPICO_BOARD=pico_w -DPICO_SDK_PATH=/path/to/pico-sdk -DCMAKE_C_COMPILER=arm-none-eabi-gcc -DCMAKE_CXX_COMPILER=/arm-none-eabi-g++ -B build -S .
-
-cmake --build build -j
+make
 ```
 
 ## Configuration

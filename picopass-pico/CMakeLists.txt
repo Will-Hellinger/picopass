@@ -6,6 +6,12 @@ pico_sdk_init()
 
 add_executable(picopass
     main.c
+    picopass/picopass_bonded.c
+    picopass/picopass_adv.c
+    picopass/picopass_gap.c
+    picopass/picopass_led.c
+    picopass/picopass_log.c
+    picopass/picopass_secret.c
 )
 
 target_include_directories(picopass PRIVATE

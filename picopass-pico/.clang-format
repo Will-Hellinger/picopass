@@ -5,5 +5,4 @@ AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 BreakBeforeBraces: Attach
-InsertBraces: true
 SortIncludes: CaseSensitive
