@@ -11,11 +11,21 @@ A Bluetooth Low Energy (BLE) proximity discovery system for Raspberry Pi Pico W 
 
 ## How It Works
 
-1. Each PicoPass device flickers back and forth between scanning and advertising rapidly.
+1. Each Picopass device flickers back and forth between scanning and advertising rapidly.
 
 2. The intervals are random and they go back and forth so fast they they will eventually overlap.
 
 3. Devices only recognize others with the matching "PicoPass" identifier
+
+## Future Plans
+
+- Picopass server and service
+    - Picopass server will provide frontend to see who you've connected with and verify the connection was legit
+    - Service runs on machines with bluetooth support which forwards info to picopass server
+
+- Picopass Client/Config Manager 
+    - Configure your picopass device without needing to rebuild the firmware with flags
+
 
 ## Hardware Requirements
 
@@ -29,6 +39,7 @@ A Bluetooth Low Energy (BLE) proximity discovery system for Raspberry Pi Pico W 
 - [Pico SDK 2.2.0](https://github.com/raspberrypi/pico-sdk/releases/tag/2.2.0)
 - ARM GNU Toolchain (`gcc-arm-none-eabi`)
 - CMake 3.13+
+- Make 4.4.1+
 
 ### Build Steps
 ```bash
@@ -36,7 +47,6 @@ git clone https://github.com/Will-Hellinger/picopass
 cd picopass
 
 cd picopass-pico
-
 make
 ```
 
